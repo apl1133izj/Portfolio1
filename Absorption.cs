@@ -10,7 +10,6 @@ public class Absorption : MonoBehaviour
     GameObject playerAbsorptionPos;
     GameObject playerPos;
     public GameObject instSkill;
-    public string skillName;
     public bool b_Absorption;
     public GameObject[] skillDis;
 
@@ -18,12 +17,12 @@ public class Absorption : MonoBehaviour
     public GameObject g_playerUI;
     PlayerUI playerUI;
     public AudioClip absorptionClip;
-    float speed = 2;
+    float speed = 1;
 
-    // SerializedObject °ü·Ã º¯¼ö (UnityEditor¿¡¼­¸¸ »ç¿ë)
+    // SerializedObject ê´€ë ¨ ë³€ìˆ˜ (UnityEditorì—ì„œë§Œ ì‚¬ìš©)
 #if UNITY_EDITOR
     SerializedObject serializedObject;
-    // ÇÊ¿äÇÑ SerializedObject¸¦ »ç¿ëÇÏ´Â °æ¿ì Ãß°¡ ÄÚµå
+    // í•„ìš”í•œ SerializedObjectë¥¼ ì‚¬ìš©í•˜ëŠ” ê²½ìš° ì¶”ê°€ ì½”ë“œ
 #endif
 
     void Start()
@@ -38,7 +37,7 @@ public class Absorption : MonoBehaviour
     }
     void Update()
     {
-        // ÇÃ·¹ÀÌ¾îÀÇ Èí¼ö ½ºÅ³À» »ç¿ëÇÑ °ÇÆ²¸´À¸·Î ÀÌµ¿
+        // í”Œë ˆì´ì–´ì˜ í¡ìˆ˜ ìŠ¤í‚¬ì„ ì‚¬ìš©í•œ ê±´í‹€ë¦¿ìœ¼ë¡œ ì´ë™
         if (Input.GetKeyDown(KeyCode.Tab)&&Distance(playerAbsorptionPos) <= 10)
         {
             skillDis = GameObject.FindGameObjectsWithTag("Skill");
@@ -57,18 +56,18 @@ public class Absorption : MonoBehaviour
         }
     }
 
-    // Distance ÇÔ¼ö ÀÌ¸§ ¼öÁ¤
+    // Distance í•¨ìˆ˜ ì´ë¦„ ìˆ˜ì •
     float Distance(GameObject player)
     {
         return Vector3.Distance(gameObject.transform.position, player.transform.position);
     }
 
     /// <summary>
-    /// °¡Àå °¡±î¿î ¿µÈ¥ºÎÅÍ Èí¼öÇÏ´Â ½Ã½ºÅÛ
+    /// ê°€ì¥ ê°€ê¹Œìš´ ì˜í˜¼ë¶€í„° í¡ìˆ˜í•˜ëŠ” ì‹œìŠ¤í…œ
     /// </summary>
     void ArearSkillAbsorptionCount()
     {
-        // °¡Àå °¡±î¿î ½ºÅ³ Ã£±â
+        // ê°€ì¥ ê°€ê¹Œìš´ ìŠ¤í‚¬ ì°¾ê¸°
         GameObject closestSkill = null;
         Vector3 startPos = Vector3.zero;
         float closestDistance = float.MaxValue;
@@ -76,7 +75,7 @@ public class Absorption : MonoBehaviour
 
         foreach (var skillObj in skillDis)
         {
-            if (skillObj == null) continue; // Null Ã¼Å©
+            if (skillObj == null) continue; // Null ì²´í¬
             float distance = Vector3.Distance(skillObj.transform.position, playerAbsorptionPos.transform.position);
             if (distance < closestDistance)
             {
@@ -85,13 +84,13 @@ public class Absorption : MonoBehaviour
                 startPos = closestSkill.transform.position;
             }
         }
-        // °¡Àå °¡±î¿î ½ºÅ³ÀÌ ¾øÀ¸¸é ÇÔ¼ö Á¾·á
+        // ê°€ì¥ ê°€ê¹Œìš´ ìŠ¤í‚¬ì´ ì—†ìœ¼ë©´ í•¨ìˆ˜ ì¢…ë£Œ
         if (closestSkill == null)
         {
-            Debug.Log("°¡±î¿î ½ºÅ³ ¿ÀºêÁ§Æ®°¡ ¾øÀ½");
+            Debug.Log("ê°€ê¹Œìš´ ìŠ¤í‚¬ ì˜¤ë¸Œì íŠ¸ê°€ ì—†ìŒ");
             return;
         }
-        // Èí¼ö ¿Ï·á Á¶°Ç: À§Ä¡ Â÷ÀÌ°¡ ÀÛÀ» °æ¿ì
+        // í¡ìˆ˜ ì™„ë£Œ ì¡°ê±´: ìœ„ì¹˜ ì°¨ì´ê°€ ì‘ì„ ê²½ìš°
         if (Vector3.Distance(closestSkill.transform.position, playerAbsorptionPos.transform.position) <= 0.1f)
         {
             UpdateSkillDisArray(closestSkill);
@@ -102,12 +101,12 @@ public class Absorption : MonoBehaviour
         }
     }
 
-    // skillDis ¹è¿­À» ¾÷µ¥ÀÌÆ®ÇÏ´Â ÇïÆÛ ÇÔ¼ö
+    // skillDis ë°°ì—´ì„ ì—…ë°ì´íŠ¸í•˜ëŠ” í—¬í¼ í•¨ìˆ˜
     void UpdateSkillDisArray(GameObject removedSkill)
     {
         List<GameObject> updatedList = new List<GameObject>(skillDis);
 
-        // »èÁ¦µÈ ¿ÀºêÁ§Æ® Á¦¿Ü
+        // ì‚­ì œëœ ì˜¤ë¸Œì íŠ¸ ì œì™¸
         updatedList.Remove(removedSkill);
 
         skillDis = updatedList.ToArray();
@@ -117,10 +116,11 @@ public class Absorption : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player") && b_Absorption)
         {
-            Debug.Log("ÇÃ·¹ÀÌ¾î ¿Í ºÎµúÄ§");
+            Debug.Log("í”Œë ˆì´ì–´ ì™€ ë¶€ë”ªì¹¨");
             for (int i = 0; i < skillCount.skillName.Length; i++)
             {
-                if (skillCount.skillName[i] == gameObject.name)//ÀÌ¸§ÀÌ °°À» °æ¿ì
+
+                if (skillCount.skillName[i] == gameObject.name)//ì´ë¦„ì´ ê°™ì„ ê²½ìš°
                 {
                     if (playerUI.f_CurseProgression >= playerUI.f_Maxf_CurseProgression - 99)
                     {
@@ -132,7 +132,11 @@ public class Absorption : MonoBehaviour
                         playerUI.f_CurseProgression += 100;
                     }
                     SoundManager.PlaySound(absorptionClip);
-                    skillCount.skillAbsorptionCount[i] -= 1;               
+                    skillCount.skillAbsorptionCount[i] -= 1;
+                    if(skillCount.skillAbsorptionCount[i] == 0)
+                    {
+                        skillCount.skillEnhanceCount[i] += 1;//ê°•í™”
+                    }
                     gameObject.SetActive(false); 
                     Destroy(gameObject,3);
                 }
@@ -140,13 +144,13 @@ public class Absorption : MonoBehaviour
         }
     }
 #if UNITY_EDITOR
-    // SerializedObject ¸Ş¸ğ¸® °ü¸® ¹× ¾ÈÀüÇÑ »ç¿ë
+    // SerializedObject ë©”ëª¨ë¦¬ ê´€ë¦¬ ë° ì•ˆì „í•œ ì‚¬ìš©
     private void OnDestroy()
     {
         if (serializedObject != null)
         {
-            serializedObject.Dispose(); // ¸Ş¸ğ¸® ÇØÁ¦
-            serializedObject = null;     // ÂüÁ¶ ÇØÁ¦
+            serializedObject.Dispose(); // ë©”ëª¨ë¦¬ í•´ì œ
+            serializedObject = null;     // ì°¸ì¡° í•´ì œ
         }
     }
 #endif
